@@ -57,7 +57,7 @@ class EntityManager:
 
     def add_component_to_entity(self, component, entity):
         """
-        :param Component component: component to add to entity
+        :param component: component to add to entity
         :param Entity entity: Entity object to add component to
         """
         components = self.components_by_class[component.__class__]
@@ -68,7 +68,7 @@ class EntityManager:
 
     def get_component_for_entity(self, component, entity):
         """
-        :param Component component:
+        :param component:
         :param Entity entity:
         :return Component:
         """
@@ -84,7 +84,7 @@ class EntityManager:
 
     def get_all_entities_with_component(self, component):
         """
-        :param Component component:
+        :param component:
         :return list: Entity objects
         """
         components = self.components_by_class[component.__class__]
