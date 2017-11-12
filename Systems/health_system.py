@@ -1,5 +1,5 @@
 from Systems.system import System
-from Components.health_component import HealthComponent
+from Components.combatant_component import CombatantComponent
 
 
 class HealthSystem(System):
@@ -7,9 +7,9 @@ class HealthSystem(System):
     Handle health components for all entities.
     """
     def update(self):
-        entities = self.entity_manager.get_all_entities_with_component(HealthComponent.__name__)
+        entities = self.entity_manager.get_all_entities_with_component(CombatantComponent.__name__)
         for entity in entities:
-            health_component = self.entity_manager.get_component_for_entity(HealthComponent.__name__, entity)
+            health_component = self.entity_manager.get_component_for_entity(CombatantComponent.__name__, entity)
             if not health_component.alive:
                 return
             if health_component.max_hp == 0:

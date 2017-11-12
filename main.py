@@ -1,7 +1,7 @@
 from random import randint
 
 from Entities.entity_manager import EntityManager
-from Components.health_component import HealthComponent
+from Components.combatant_component import CombatantComponent
 from Systems.health_system import HealthSystem
 
 """
@@ -19,8 +19,8 @@ if __name__ == "__main__":
     health_system = HealthSystem(mgr)
 
     player = mgr.create_entity()
-    mgr.add_component_to_entity(HealthComponent(10), player)
-    player_health = mgr.get_component_for_entity(HealthComponent.__name__, player)
+    mgr.add_component_to_entity(CombatantComponent(10, 1, 1), player)
+    player_health = mgr.get_component_for_entity(CombatantComponent.__name__, player)
 
     while player_health.alive:
         if randint(0, 100) > 90:
