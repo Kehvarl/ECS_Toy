@@ -1,3 +1,4 @@
+from random import randint
 """
 ECS Toy
 Author: Kehvarl
@@ -60,37 +61,37 @@ class EntityManager:
         :param component: component to add to entity
         :param Entity entity: Entity object to add component to
         """
-        components = self.components_by_class[component.__class__]
+        components = self.components_by_class.get(type(component).__name__)
         if components is None:
             components = {}
-            self.components_by_class[component.__class__] = components
+            self.components_by_class[type(component).__name__] = components
         components[entity.entity_id] = component
 
-    def get_component_for_entity(self, component, entity):
+    def get_component_for_entity(self, component_name, entity):
         """
-        :param component:
+        :param component_name:
         :param Entity entity:
         :return Component:
         """
-        return self.components_by_class[component.__class__][entity.entity_id]
+        return self.components_by_class.get(component_name)[entity.entity_id]
 
     def remove_entity(self, entity):
         """
         :param Entity entity:
         """
         for components in self.components_by_class:
-            components[entity.entity_id] = None
+            self.components_by_class[components][entity.entity_id] = None
         self.entities.remove(entity.entity_id)
 
-    def get_all_entities_with_component(self, component):
+    def get_all_entities_with_component(self, component_name):
         """
-        :param component:
+        :param component_name:
         :return list: Entity objects
         """
-        components = self.components_by_class[component.__class__]
+        components = self.components_by_class[component_name]
         entities = []
         if components:
-            for entity_id, _ in components:
+            for entity_id, component_type in components.items():
                 entities.append(Entity(entity_id))
         return entities
 
@@ -108,9 +109,9 @@ class System:
 
 class HealthSystem(System):
     def update(self):
-        entities = self.entity_manager.get_all_entities_with_component(HealthComponent)
+        entities = self.entity_manager.get_all_entities_with_component(HealthComponent.__name__)
         for entity in entities:
-            health_component = self.entity_manager.get_component_for_entity(HealthComponent, entity)
+            health_component = self.entity_manager.get_component_for_entity(HealthComponent.__name__, entity)
             if not health_component.alive:
                 return
             if health_component.max_hp == 0:
@@ -118,3 +119,18 @@ class HealthSystem(System):
             if health_component.current_hp <= 0:
                 health_component.alive = False
                 self.entity_manager.remove_entity(entity)
+
+
+if __name__ == "__main__":
+    mgr = EntityManager()
+    health_system = HealthSystem(mgr)
+
+    player = mgr.create_entity()
+    mgr.add_component_to_entity(HealthComponent(10), player)
+    player_health = mgr.get_component_for_entity(HealthComponent, player)
+
+    while player_health.alive:
+        if randint(0, 100) > 90:
+            player_health.current_hp -= 1
+        health_system.update()
+        print(player_health.current_hp)
