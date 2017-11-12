@@ -119,6 +119,7 @@ class HealthSystem(System):
             if health_component.current_hp <= 0:
                 health_component.alive = False
                 self.entity_manager.remove_entity(entity)
+                print("Entity Died!")
 
 
 if __name__ == "__main__":
@@ -127,10 +128,10 @@ if __name__ == "__main__":
 
     player = mgr.create_entity()
     mgr.add_component_to_entity(HealthComponent(10), player)
-    player_health = mgr.get_component_for_entity(HealthComponent, player)
+    player_health = mgr.get_component_for_entity(HealthComponent.__name__, player)
 
     while player_health.alive:
         if randint(0, 100) > 90:
             player_health.current_hp -= 1
-        health_system.update()
         print(player_health.current_hp)
+        health_system.update()
