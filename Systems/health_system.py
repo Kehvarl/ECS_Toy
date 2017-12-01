@@ -17,4 +17,3 @@ class HealthSystem(System):
             if health_component.current_hp <= 0:
                 health_component.alive = False
                 self.entity_manager.remove_entity(entity)
-                print("Entity Died!")
